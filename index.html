@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OD Auto Server</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background: #272727;
+      font-family: Helvetica, sans-serif;
+    }
+
+
+    body {
+      padding: 50px 80px;
+      margin: 0 auto;
+      max-width: 1000px;
+      min-height: 100vh;
+      border-left: 5px solid rgba(145, 145, 145, .8);
+      border-right: 5px solid rgba(145, 145, 145, .8);
+      box-sizing: border-box;
+    }
+
+    header {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 50px;
+
+      color: #ffffff;
+    }
+
+    .status {
+      font-weight: 700;
+    }
+
+    #status {
+      padding: 5px 10px;
+      border-radius: 50px;
+      margin-left: 10px;
+      font-weight: 400;
+    }
+
+    .ready {
+      background: #00B907;
+    }
+
+    .working {
+      background: #F79800;
+    }
+
+    main {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+    }
+
+    .btnWrapper {
+      display: flex;
+      flex-flow: column nowrap;
+      flex-grow: 0;
+      margin-right: 50px;
+      color: #ffffff;
+    }
+
+    .btnWrapper input {
+      width: 200px;
+      margin-top: 30px;
+      padding: 10px 20px;
+      border: 3px solid #ffffff;
+      border-radius: 25px;
+      background-color: #272727;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      transition: all .2s ease;
+      cursor: pointer;
+    }
+
+    .btnWrapper input:disabled {
+      border-color: #c3c3c3;
+      color: #c3c3c3;
+      cursor: default;
+    }
+
+    .log {
+      width: 480px;
+      padding: 30px 40px;
+      border-radius: 20px;
+      background: #ffffff;
+    }
+
+    .log h2:first-of-type {
+      padding-top: 0;
+      margin-top: 0;
+      border-top: none;
+    }
+
+    .log h2 {
+      padding-top: 15px;
+      margin-top: 15px;
+      margin-bottom: 15px;
+      border-top: 2px dashed #D3D3D3;
+    }
+
+    .updated p {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .msgs {
+      height: 300px;
+      overflow-y: scroll;
+    }
+
+    .log p {
+      margin-bottom: 10px;
+    }
+
+    .log .boardName {
+      font-size: 20px;
+      border-bottom: solid 2px lightgrey;
+      padding-top: 0;
+      margin-top: 25px;
+      border-top: none;
+    }
+
+    .logMsg {
+      padding: 5px 8px !important;
+      border-radius: 5px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">
+      <!-- <img src="" alt=""> -->
+      <h1>OD auto server</h1>
+    </div>
+    <div class="status">
+      <span>Status: </span><span id="status" class="ready">Ready!</span>
+    </div>
+  </header>
+  <main>
+    <div class="btnWrapper">
+      <input id="klantDB" type="button" value="KlantenDB">
+      <input id="sheetsAirtableLink" type="button" value="Sheets-Airtable">
+    </div>
+    <div class="log">
+      <h2>Last update</h2>
+      <div class="updated">
+        <p>KlantenDB: <span class="dbValue"></span></p>
+        <p>SheetsAirtable: <span class="sheetsValue"></span></p>
+      </div>
+
+      <h2>Log</h2>
+      <div class="msgs"></div>
+    </div>
+  </main>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+  const socket = io();
+
+  $('#klantDB').on('click', () => {
+    $('.msgs').empty();
+    $.get("./api/klantenDB");
+  });
+
+  $('#sheetsAirtableLink').on('click', () => {
+    $('.msgs').empty();
+    $.get("./api/sheetsAirtableLink");
+  });
+
+  socket.on('message', (msg) => {
+    $('.msgs').append(msg);
+    $('.msgs')[0].scrollTop = $('.msgs')[0].scrollHeight;
+  });
+
+  socket.on('block', (msg) => {
+    $('.dbValue').text(msg.KlantenDB);
+    $('.sheetsValue').text(msg.SheetsAirtable);
+
+    if (msg.working) {
+      $('#status').text('Working...');
+      $('#status').removeClass('ready');
+      $('#status').addClass('working');
+      $('.btnWrapper > input').attr('disabled', '');
+    } else if (!msg.working) {
+      $('#status').text('Ready!');
+      $('#status').removeClass('working');
+      $('#status').addClass('ready');
+      $('.btnWrapper > input').removeAttr('disabled');
+    }
+  });
+</script>
