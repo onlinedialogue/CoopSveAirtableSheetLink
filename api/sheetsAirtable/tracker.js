@@ -1,5 +1,5 @@
 const getClientRecord = require('./getClientRecord');
-const writeToClient = require('./eersteTabel/writeToClient');
+const writeToClient = require('./firstKPI/writeToClient');
 
 const { asyncForEach } = require('../../services/tools');
 
@@ -9,7 +9,7 @@ const link = (e) => {
   return new Promise(async (resolve) => {
     console.log(e.name);
     console.log('Tracker: Getting records...');
-    const toUpdate = await getClientRecord(e.baseID, e.tab, 'Track Sheet');
+    const toUpdate = await getClientRecord(e.baseID, e.tab, 'Track data daily');
 
     if (toUpdate.length) {
       await writeToClient(toUpdate, e.baseID, e.tab, 'Data!J14:O35');

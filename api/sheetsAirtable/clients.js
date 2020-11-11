@@ -1,6 +1,6 @@
 const clients = [
   COOPSverige = {
-    name: 'COOP Sverige',
+    name: 'COOP',
     baseID: 'appOwC7Y5DvwcfYKf',
     tab: 'All experiments',
     secondTab: true,

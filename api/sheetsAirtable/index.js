@@ -1,6 +1,6 @@
 const getClientRecord = require('./getClientRecord');
-const writeToClient = require('./eersteTabel/writeToClient');
-const writeToClient2 = require('./tweedeTabel/writeToClient2');
+const writeToClient = require('./firstKPI/writeToClient');
+const writeToClient2 = require('./secondKPI/writeToClient2');
 
 const { asyncForEach } = require('../../services/tools');
 
@@ -12,7 +12,7 @@ const link = (e) => {
 
     if (e.secondTab) {
       console.log('Table 2: Getting records...');
-      const toUpdate2 = await getClientRecord(e.baseID, e.tab, 'Sheets query 2');
+      const toUpdate2 = await getClientRecord(e.baseID, e.tab, 'Sheets query KPI 2');
       if (toUpdate2.length) {
         await writeToClient2(toUpdate2, e.baseID, e.tab, 'Airtable!C21:H37');
       } else {
@@ -21,7 +21,7 @@ const link = (e) => {
     }
 
     console.log('Table 1: Getting records');
-    const toUpdate = await getClientRecord(e.baseID, e.tab, 'Sheets query');
+    const toUpdate = await getClientRecord(e.baseID, e.tab, 'Sheets query KPI 1');
 
     if (toUpdate.length) {
       await writeToClient(toUpdate, e.baseID, e.tab, 'Airtable!C2:H41');

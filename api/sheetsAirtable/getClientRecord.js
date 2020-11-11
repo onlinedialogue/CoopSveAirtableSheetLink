@@ -1,6 +1,7 @@
 const Airtable = require('airtable');
 
 const clientObj = (baseID, tabName, query) => {
+  console.log(baseID, tabName, query);
   return new Promise((resolve) => {
     const clientAirtable = new Airtable({ apiKey: process.env.AIRTABLE_KEY }).base(baseID);
     const clientRecordArray = [];

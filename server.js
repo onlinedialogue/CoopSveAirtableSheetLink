@@ -12,6 +12,7 @@ app.use('/api', api);
 http.listen(process.env.PORT, () => {
   console.log('listening on port: ' + process.env.PORT);
 
+//? edit schedule below
   cron.schedule('00 8 * * 1-5', async () => {
     console.log('AIRTABLE-LINK');
     await sheetsAirtableLink();
@@ -21,4 +22,4 @@ http.listen(process.env.PORT, () => {
   });
 });
 
-sheetsAirtableLink();
+sheetsTracker()
