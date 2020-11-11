@@ -12,7 +12,7 @@ const link = (e) => {
     const toUpdate = await getClientRecord(e.baseID, e.tab, 'Track data daily');
 
     if (toUpdate.length) {
-      await writeToClient(toUpdate, e.baseID, e.tab, 'Data!J14:O35');
+      await writeToClient(toUpdate, e.baseID, e.tab, 'Data!G8:M29');
     } else {
       console.log('Up to date');
     }

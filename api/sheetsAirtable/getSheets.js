@@ -32,7 +32,9 @@ const getSheet = (sheetID, range) => {
         finished: false,
       };
 
-      if (range === 'Data!J14:O35') {
+      console.table(rows)
+
+      if (range === 'Data!G8:M29') {
         values.segmentA = rows[20] || ['', '', '', ''];
         values.segmentB = rows[21] || ['', '', '', ''];
       } else if (range === 'Airtable!C2:H41') {
